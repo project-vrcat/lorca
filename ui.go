@@ -18,6 +18,7 @@ type UI interface {
 	Eval(js string) Value
 	Done() <-chan struct{}
 	Close() error
+	Getpid() int
 }
 
 type ui struct {
@@ -173,4 +174,12 @@ func (u *ui) SetBounds(b Bounds) error {
 
 func (u *ui) Bounds() (Bounds, error) {
 	return u.chrome.bounds()
+}
+
+func (u *ui) Getpid() int {
+	cmd := u.chrome.cmd
+	if cmd == nil || cmd.Process == nil {
+		return -1
+	}
+	return cmd.Process.Pid
 }
